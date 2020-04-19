@@ -1,0 +1,6 @@
+
+buildroot-2020.02.tar.bz2
+user_zImage
+buildroot-2020.02/
+venv/  
+rootfs.ext4

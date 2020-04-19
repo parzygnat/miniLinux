@@ -1,0 +1,5 @@
+#!/bin/sh
+if [ "$IFACE" = eth0 ]; then
+	ntpdate -u 0.pl.pool.ntp.org
+	echo "ntp has been triggered"
+fi

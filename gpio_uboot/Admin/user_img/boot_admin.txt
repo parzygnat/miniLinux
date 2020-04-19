@@ -1,0 +1,39 @@
+fdt addr ${fdt_addr}
+fdt get value bootargs_orig /chosen bootargs
+mmc dev 0
+echo "NOW RECONNECT"
+sleep 3
+echo "CLEANING 0, 24, 25, 26"
+gpio clean 0
+gpio clean 24
+gpio clean 25
+gpio clean 26
+echo "CURRENT 0 INPUT"
+gpio input 0
+echo "ALL CLEAN NOW switch THE BUTTON 0 TO RUN ADMIN"
+gpio set 24 1
+sleep 6
+if gpio input 0; then
+  gpio set 25 1
+  gpio clear 24
+  echo "BY DEFAULT THE UTILITY FILESYSTEM HAS BEEN CHOSEN"
+  setenv bootargs "console=ttyAMA0 root=/dev/mmcblk0p2 rootwait"
+  setenv fdt_addr_r $ramdisk_addr_r
+  setenv kernel_addr_r 0x61000000
+  setenv fdt_addr_r 0x80008000
+  load mmc 0:1 $fdt_addr_r vexpress-v2p-ca9-user.dtb
+  load mmc 0:1 $kernel_addr_r zImage_user
+  bootz $kernel_addr_r - $fdt_addr_r
+
+else
+  gpio set 26 1
+  gpio clear 24
+  echo "THE ADMIN FILESYSTEM HAS BEEN CHOSEN ON CLICK" 
+  setenv bootargs "console=ttyAMA0"
+  setenv fdt_addr_r $ramdisk_addr_r
+  setenv kernel_addr_r 0x61000000
+  setenv fdt_addr_r 0x80008000
+  load mmc 0:1 $fdt_addr_r vexpress-v2p-ca9.dtb
+  load mmc 0:1 $kernel_addr_r zImage
+  bootz $kernel_addr_r - $fdt_addr_r
+fi

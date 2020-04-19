@@ -1,0 +1,7 @@
+#!/bin/sh
+echo 'Downloading update of /etc/file1.txt...'
+wget 10.0.2.2:8000/update.tar.gz
+echo 'Unpacking and cleaning...'
+gzip -dc update.tar.gz | tar -xf - -C /etc
+rm update.tar.gz
+echo 'Update: OK'
